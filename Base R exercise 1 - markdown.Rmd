@@ -1,0 +1,300 @@
+---
+title: "Base R 1: Vectors"
+author: "Glib Dolotov"
+date: "February 04, 2018"
+header-includes:
+  \DeclareMathSizes{12}{12}{12}{12}
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### 1. Create the vectors:
+
+ (a) (1, 2, 3, . . . , 19, 20)  
+ 
+******
+ 
+```{r}
+
+1:20
+
+```
+******
+
+ (b) (20, 19, . . . , 2, 1)
+
+******
+```{r}
+
+20:1
+
+```
+******
+
+ (c) (1, 2, 3, . . . , 19, 20, 19, 18, . . . , 2, 1)
+
+******
+```{r}
+
+c(1:20, 19:1)
+
+```
+******
+
+ (d) assign vector c(4, 6, 3) variable name tmp
+
+ Use tmp for parts (e), (f) and (g)
+ 
+******
+```{r}
+
+tmp <- c(4, 6, 3)
+
+```
+******
+ (e) (4, 6, 3, 4, 6, 3, . . .  , 4, 6, 3) where there are 10 occurrences of 4.
+
+******
+```{r}
+rep(tmp, times=10)
+```
+******
+
+ (f) (4, 6, 3, 4, 6, 3, . . . , 4, 6, 3, 4) where there are 11 occurrences of 4, 10 occurrences of 6 and 10 occurrences of 3.
+
+******
+```{r}
+c(rep(tmp, times=10),4)
+```
+******
+
+ (g) (4, 4, . . . , 4, 6, 6, . . .  , 6, 3, 3, . . . , 3) where there are 10 occurrences of 4, 20 occurrences of 6 and 30 occurrences of 3.
+ 
+******
+```{r}
+rep(tmp, times=c(10,20,30))
+```
+******
+ 
+### 2. Create a vector of the values of
+$e^x cos(x)$ at x = 3, 3.1, 3.2, . . . ,6.
+
+******
+```{r}
+# I elected to use a new variable instead of reusing "tmp"
+x <- seq(from = 3, to = 6, by = 0.1)
+exp(x)*cos(x)
+head(x, n = 30)
+# To keep the listing shorter
+```
+******
+
+### 3. Create the following vectors:
+
+ (a) $(0.1^3 0.2^1, 0.1^6 0.2^4, ... ,0.1^{36} 0.2{34})$
+
+******
+```{r}
+i = c(0.1, 0.2)
+j = c(3, 1)
+k = rep(c(0:33), rep(2, 34))
+i^(j+k)
+```
+******
+
+ (b) $(2, \frac{2^2}{2}, \frac{2^3}{3}, ... ,\frac{2^{25}}{25})$
+
+ ******
+```{r}
+i <- c(2)
+j <- c(1:25)
+i^j/j
+```
+******
+
+### 4. Calculate the following:
+
+ (a) $\sum\limits_{i = 10}^{100}(i^3 + 4i^2)$
+
+******
+```{r}
+i <- c(10:100)
+sum(i^3 + 4*i^2)
+```
+******
+
+ (b) $\sum\limits_{i=1}^{25}(\frac{2^i}{i}+\frac{3^i}{i^2})$
+ 
+******
+```{r}
+i <- c(1:25)
+sum(2^i/i + 3^i/i^2)
+```
+
+
+
+### 5. Use the function paste() to create the following character vectors of length 30:
+
+ (a) ("label 1", "label 2", ....., "label 30").
+Note that there is a single space between label and the number following.
+
+******
+```{r}
+paste(c("label"), c(1:30), sep=" ")
+```
+******
+
+
+ (b) ("fn1", "fn2", ..., "fn30").
+
+In this case, there is no space between fn and the number following.
+******
+```{r}
+paste(c("fn"), c(1:30), sep="")
+```
+******
+
+### 6. Execute the following lines which create two vectors of random integers which are chosen with replacement from the integers 0, 1, . . . , 999. Both vectors have length 250.
+
+******
+```{r}
+set.seed(50)
+xVec <- sample(0:999, 250, replace=T)
+yVec <- sample(0:999, 250, replace=T)
+```
+******
+
+Suppose $x = (x_1, x_2, . . . ,x_n)$ denotes the vector xVec and
+$y = (y_1, y_2, . .  ,y_n)$ denotes the vector yVec.
+
+
+ (a) Create the vector
+$(y_2 - x_1, . . . , y_n - x_{n-1})$.
+
+******
+```{r}
+yVec[-1] - xVec[-length(xVec)]
+```
+******
+
+ (b) Create the vector
+$(\frac{sin(y_1)}{cos(x_2)}, \frac{sin(y_2)}{x_3}, ...,\frac{y_{n-1}}{cos(x_n)})$.
+
+******
+```{r}
+sin(yVec[-length(yVec)]) / cos(xVec[-1])
+```
+******
+
+```{r}
+tmp1 <- sin(yVec[-length(yVec)])/cos(xVec[-1])
+
+head(tmp1, n = 30)
+
+```
+******
+
+
+ (c) Create the vector
+$(x_1 + 2x_2 - x_3, x_2 + 2x_3 - x_4, ..., x_{x-2} + 2x_{n-1} - x_n)$
+
+******
+```{r}
+xVec[c(1:(length(xVec) - 2))] + 2*xVec[c(2:(length(xVec) - 1))] - xVec[c(3:length(xVec))]
+```
+******
+
+ (d) Calculate
+$\sum\limits_{i=1}^{n-1} \frac{e^{-x_{i+1}}}{x_i + 10}$
+
+******
+```{r}
+sum(exp(-xVec[c(2:length(xVec))]) / (xVec[c(1:(length(xVec) - 1))] + 10))
+```
+******
+
+### 7. This question uses the vectors xVec and yVec created in the previous question and the functions sort,
+order, mean, sqrt, sum, and abs.
+
+ (a) Pick out the values in yVec which are > 600.
+
+******
+```{r}
+yVec[yVec > 600]
+```
+******
+
+ (b) What are the index positions in yVec of the values which are > 600?
+
+******
+```{r}
+hw19 = c(1:length(yVec))[yVec > 600]
+hw19
+```
+******
+
+ (c) What are the values in xVec which correspond to the values in yVec which are > 600? (By correspond, we mean at the same index positions.)
+
+******
+```{r}
+xVec[hw19]
+```
+******
+
+
+ (d) Create the vector $(|x_1 - \bar{x}|^{1/2}, |x_2 - \bar{x}|^{1/2}, ..., |x_n - \bar{x}|^{1/2})$
+
+******
+```{r}
+abs(xVec - mean(xVec))^0.5
+```
+******
+
+ (e) How many values in yVec are within 200 of the maximum value of the terms in yVec?
+
+******
+```{r}
+length(yVec[yVec > max(yVec) - 200])
+```
+******
+
+ (f) How many numbers in xVec are divisible by 2? (Note that the modulo operator is denoted \%\%.)
+
+******
+```{r}
+length(xVec[xVec %% 2 == 0])
+```
+******
+
+ (g) Sort the numbers in the vector xVec in the order of increasing values in yVec.
+
+******
+```{r}
+ xVec[order(yVec)]
+```
+******
+
+ (h) Pick out the elements in yVec at index positions 1, 4, 7, 10, 13, . . .
+
+******
+```{r}
+yVec[c(1:83) * 3 - 2]
+```
+******
+
+## 8. By using the function cumprod or otherwise, calculate
+
+$1 + \frac{2}{3} + (\frac{2}{3}\frac{4}{5}) + (\frac{2}{3}\frac{4}{5}\frac{6}{7} + ... + (\frac{2}{3}\frac{4}{5} ... \frac{38}{39}))$
+
+******
+```{r}
+sum(
+  cumprod(
+    seq(from = 2, to = 38, by = 2) / seq(from = 3, to = 39,by = 2)
+    )
+  ) + 1
+```
+******
